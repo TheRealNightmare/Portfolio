@@ -1,7 +1,6 @@
 import { Component, createRef } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
 import './crt.css'
-import ContactTerminalForm from './ContactTerminalForm'
 import { projects } from '../../data/projects'
 import { skillGroups } from '../../data/skills'
 import { timeline } from '../../data/experience'
@@ -102,11 +101,11 @@ export default class Terminal extends Component<Props, TState> {
   onResize: (() => void) | undefined
 
   // ---- theme ----
-  themeOf(s: Section): 'green' | 'amber' | 'cyan' {
-    return s === 'projects' ? 'amber' : s === 'blog' ? 'cyan' : 'green'
+  themeOf(_s: Section): 'green' {
+    return 'green'
   }
   themeColor(): string {
-    return { amber: '#ffb23e', cyan: '#5fe6f0', green: '#35f07a' }[this.themeOf(this.state.section)]
+    return { green: '#35f07a' }[this.themeOf(this.state.section)]
   }
   gx(): CSSProperties {
     return { color: 'var(--phosphor,#35f07a)', textShadow: 'var(--glow)' }
@@ -531,12 +530,28 @@ export default class Terminal extends Component<Props, TState> {
     )
   }
   aboutBlock(whoami: boolean): ReactNode {
-    const face = ['  ▄▄▄▄▄▄▄▄  ', ' ██████████ ', ' ██████████ ', ' ███▟▙██▟▙██ ', ' █████▼▼████ ', ' ██████████ ', ' ██████████ ', '  ▀▀▀▀▀▀▀▀  ', '   ▀▀▀▀▀▀   '].join('\n')
+    const face = [
+      '         ▄▄▄▄▄▄',
+      '       ▄████████▄',
+      '     ▟████████████▙',
+      '    ▟██████████████▙',
+      '    ▐██████████████▌',
+      '    ▐██▀▀▀▀▀▀▀▀▀▀██▌',
+      '    ▐██          ██▌',
+      '    ▐██ ▄▄    ▄▄ ██▌',
+      '    ▐██          ██▌',
+      '    ▐██▄▄▄▄▄▄▄▄▄▄██▌',
+      '    ▐██████████████▌',
+      '   ▟████████████████▙',
+      '  ▟██████████████████▙',
+      '  ████████████████████',
+      '  ████▘          ▝████',
+    ].join('\n')
     return (
       <div>
         {this.heading(whoami ? 'whoami' : 'ABOUT', 'visitor sees: Mirazul Islam Nahid')}
         <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
-          {this.pre(face, { fontSize: '.86em', filter: 'drop-shadow(0 0 6px var(--phosphor,#35f07a))' })}
+          {this.pre(face, { fontSize: '.8em', lineHeight: 1, filter: 'drop-shadow(0 0 6px var(--phosphor,#35f07a))' })}
           <div style={{ flex: '1 1 280px', minWidth: '240px' }}>
             {this.p("Hi — I'm Mirazul Islam Nahid. I'm a CSE student at United International University and a software developer at MonerBondhu, building full-stack software while I finish my degree.")}
             {this.p('I started out as a web developer at Rokirovka back in 2021, sharpening my skills on real products. The best learning happens when theory meets practice, so I keep shipping side projects between deadlines.')}
@@ -573,7 +588,7 @@ export default class Terminal extends Component<Props, TState> {
           e.stopPropagation()
           this.runCommand('open ' + projectId(p))
         }}
-        style={{ cursor: 'pointer', border: '1px solid var(--phosphor-dim,rgba(255,178,62,.3))', padding: '12px 14px', marginBottom: '10px' }}
+        style={{ cursor: 'pointer', border: '1px solid var(--phosphor-dim,rgba(53,240,122,.3))', padding: '12px 14px', marginBottom: '10px' }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '12px' }}>
           <span style={{ fontWeight: 700, fontSize: '1.02em', ...this.gx() }}>{p.title}</span>
@@ -689,7 +704,7 @@ export default class Terminal extends Component<Props, TState> {
           e.stopPropagation()
           this.runCommand('read ' + p.id)
         }}
-        style={{ cursor: 'pointer', display: 'flex', gap: '16px', padding: '9px 0', borderBottom: '1px solid var(--phosphor-dim,rgba(95,230,240,.18))', flexWrap: 'wrap' }}
+        style={{ cursor: 'pointer', display: 'flex', gap: '16px', padding: '9px 0', borderBottom: '1px solid var(--phosphor-dim,rgba(53,240,122,.18))', flexWrap: 'wrap' }}
       >
         <span style={this.dim({ minWidth: '92px', fontSize: '.9em' })}>{p.date}</span>
         <div style={{ flex: '1 1 260px' }}>
@@ -734,19 +749,12 @@ export default class Terminal extends Component<Props, TState> {
     )
     return (
       <div>
-        {this.heading('CONTACT', 'send a message, or reach me directly')}
+        {this.heading('CONTACT', 'reach me directly')}
         {row('email', 'nnahid929@gmail.com', 'mailto:nnahid929@gmail.com')}
         {row('github', 'github.com/TheRealNightmare', 'https://github.com/TheRealNightmare')}
         {row('linkedin', 'in/mirazulislamnahid', 'https://www.linkedin.com/in/mirazulislamnahid/')}
         {row('x', '@TheRealNightmare', 'https://x.com/TheRealNightmare')}
         {row('location', 'Dhaka, BD (UTC+6)')}
-        <div style={{ marginTop: '14px', ...this.dim({ fontSize: '.86em', letterSpacing: '.06em' }) }}>$ send --message</div>
-        <ContactTerminalForm
-          onResult={(ok) => {
-            if (ok) this.pushToast({ title: 'message sent', sub: "I'll get back to you soon", accent: '#7cffb0', glow: 'rgba(124,255,176,.4)', icon: '✉' })
-            this.beep(ok ? 600 : 200)
-          }}
-        />
       </div>
     )
   }
